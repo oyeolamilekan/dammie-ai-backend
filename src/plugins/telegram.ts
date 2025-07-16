@@ -30,23 +30,43 @@ interface BotMessage {
   text?: string;
 }
 
-// Bot class
+/**
+ * @class DammieCryptoBot
+ * @description Implements a Telegram bot for cryptocurrency transactions and information,
+ * integrating with OpenAI for AI-driven responses and various tools for wallet operations.
+ */
 class DammieCryptoBot {
   private bot: TelegramBot;
   private rateLimiter: RateLimiter;
 
+  /**
+   * @constructor
+   * @description Initializes the Telegram bot, rate limiter, and sets up event handlers.
+   */
   constructor() {
     this.bot = telegramBot;
     this.rateLimiter = new RateLimiter();
     this.setupEventHandlers();
   }
 
+  /**
+   * @private
+   * @method setupEventHandlers
+   * @description Sets up event listeners for incoming messages, polling errors, and graceful shutdown.
+   */
   private setupEventHandlers(): void {
     this.bot.on('message', this.handleMessage.bind(this));
     this.bot.on('polling_error', this.handlePollingError.bind(this));
     this.setupGracefulShutdown();
   }
 
+  /**
+   * @private
+   * @method handleMessage
+   * @description Processes incoming Telegram messages. It handles rate limiting, distinguishes
+   * between commands and regular messages, and dispatches them to appropriate handlers.
+   * @param {BotMessage} message - The incoming message object from Telegram.
+   */
   private async handleMessage(message: BotMessage): Promise<void> {
     try {
       const userId = message.from?.id as number;
@@ -78,6 +98,16 @@ class DammieCryptoBot {
     }
   }
 
+  /**
+   * @private
+   * @method handleCommand
+   * @description Handles specific bot commands like /start, /rates, and /help.
+   * It provides welcome messages, displays crypto rates, or offers help information.
+   * @param {string} command - The command string (e.g., "/start").
+   * @param {number} userId - The Telegram user ID.
+   * @param {number} chatId - The Telegram chat ID.
+   * @param {string} username - The username of the sender.
+   */
   private async handleCommand(command: string, userId: number, chatId: number, username: string): Promise<void> {
     switch (command) {
       case '/start':
@@ -112,6 +142,16 @@ class DammieCryptoBot {
     }
   }
 
+  /**
+   * @private
+   * @method processUserMessage
+   * @description Processes a regular user message by sending it to the OpenAI model
+   * and utilizing available tools to generate a relevant AI response.
+   * @param {string} text - The text content of the user's message.
+   * @param {number} userId - The Telegram user ID.
+   * @param {number} chatId - The Telegram chat ID.
+   * @param {string} username - The username of the sender.
+   */
   private async processUserMessage(text: string, userId: number, chatId: number, username: string): Promise<void> {
     await this.bot.sendChatAction(chatId, 'typing');
 
@@ -169,6 +209,14 @@ class DammieCryptoBot {
     }
   }
 
+  /**
+   * @private
+   * @method sendAIResponse
+   * @description Sends the AI-generated response back to the user. It checks for
+   * specific actions within the response to include interactive buttons.
+   * @param {number} chatId - The Telegram chat ID to send the response to.
+   * @param {string} response - The AI-generated response text.
+   */
   private async sendAIResponse(chatId: number, response: string): Promise<void> {
     const responseText = response?.trim();
 
@@ -204,6 +252,14 @@ class DammieCryptoBot {
     });
   }
 
+  /**
+   * @private
+   * @method sendMessage
+   * @description A utility method to send a message to a specific chat ID, with optional Telegram API options.
+   * @param {number} chatId - The Telegram chat ID.
+   * @param {string} text - The text message to send.
+   * @param {any} [options] - Optional settings for the message (e.g., parse_mode, reply_markup).
+   */
   private async sendMessage(chatId: number, text: string, options?: any): Promise<void> {
     try {
       await this.bot.sendMessage(chatId, text, options);
@@ -212,6 +268,14 @@ class DammieCryptoBot {
     }
   }
 
+  /**
+   * @private
+   * @method handleError
+   * @description Centralized error handling method for sending error messages to the user and logging errors.
+   * @param {number} chatId - The Telegram chat ID where the error occurred.
+   * @param {any} error - The error object.
+   * @param {string} context - A string describing the context where the error occurred (e.g., "message handler").
+   */
   private async handleError(chatId: number, error: any, context: string): Promise<void> {
     Logging.error(`Error in ${context}:`, error);
 
@@ -222,14 +286,34 @@ class DammieCryptoBot {
     await this.sendMessage(chatId, errorMessage);
   }
 
+  /**
+   * @private
+   * @method handlePollingError
+   * @description Handles errors that occur during the Telegram bot's polling process.
+   * @param {any} error - The polling error object.
+   */
   private handlePollingError(error: any): void {
     console.error('Polling error:', error);
   }
 
+  /**
+   * @private
+   * @method getUsername
+   * @description Extracts the username or first name from a Telegram message object for personalized greetings.
+   * Defaults to 'there' if no name is available.
+   * @param {BotMessage} message - The incoming message object.
+   * @returns {string} The username or 'there'.
+   */
   private getUsername(message: BotMessage): string {
     return message.from?.username || message.from?.first_name || 'there';
   }
 
+  /**
+   * @private
+   * @method setupGracefulShutdown
+   * @description Sets up listeners for process signals (SIGINT, SIGTERM) to gracefully
+   * stop the bot's polling and exit the application.
+   */
   private setupGracefulShutdown(): void {
     const shutdown = () => {
       Logging.info('Shutting down bot...');
@@ -241,6 +325,11 @@ class DammieCryptoBot {
     process.on('SIGTERM', shutdown);
   }
 
+  /**
+   * @public
+   * @method start
+   * @description Initiates the Telegram bot, starts polling for messages, and logs startup information.
+   */
   public start(): void {
     Logging.info('🚀 Dammie Crypto Bot is running...');
     Logging.info('✅ Polling started successfully');

@@ -1,3 +1,7 @@
+/**
+ * This file contains the listeners for various job queues, processing tasks related to user wallets, deposits, and cryptocurrency swaps.
+ * It uses Bull for queue management and interacts with Redis for job storage.
+ */
 import Bull from "bull";
 import Logging from "../library/logging.utils";
 import CONFIG from "../config/config";
@@ -12,7 +16,12 @@ import { findAndUpdateSwap, findSwap, findSwapById } from "../queries/swap.query
 import { findBank } from "../queries/bank.query";
 import { QUEUE_NAMES } from "./queueNames.job";
 
-// Common queue event handlers
+/**
+ * Sets up common event handlers for a given Bull queue.
+ * This function logs when a job is completed successfully or when it fails.
+ * @param queue The Bull queue instance to set up event handlers for.
+ * @param queueName A descriptive name for the queue, used in logs.
+ */
 const setupQueueEvents = (queue: Bull.Queue, queueName: string) => {
   queue.on("global:completed", (job, result) => {
     queue.clean(0, "completed");
@@ -24,6 +33,10 @@ const setupQueueEvents = (queue: Bull.Queue, queueName: string) => {
   });
 };
 
+/**
+ * Processes jobs related to creating new cryptocurrency wallets for sub-users.
+ * It attempts to create wallets for all supported cryptocurrencies and logs the outcome.
+ */
 const processCreateSubuser = async () => {
   const walletQueue = new Bull(QUEUE_NAMES.CREATE_WALLET, opts);
 
@@ -71,6 +84,10 @@ const processCreateSubuser = async () => {
   setupQueueEvents(walletQueue, "Wallet Creation");
 };
 
+/**
+ * Processes jobs for assigning a new wallet address to a user's cryptocurrency wallet.
+ * It updates the wallet in the database with the new address and related details.
+ */
 const processAssignWalletAddress = async () => {
   const walletAddressQueue = new Bull(QUEUE_NAMES.ASSIGN_WALLET_ADDRESS, opts);
 
@@ -107,6 +124,10 @@ const processAssignWalletAddress = async () => {
   setupQueueEvents(walletAddressQueue, "Wallet Address Assignment");
 };
 
+/**
+ * Processes jobs for confirming new cryptocurrency deposits.
+ * It checks for existing deposits, creates a new deposit record, and sends a notification to the user via Telegram.
+ */
 const processDepositConfirmation = async () => {
   const depositQueue = new Bull(QUEUE_NAMES.DEPOSIT_CONFIRMATION, opts);
 
@@ -154,6 +175,10 @@ const processDepositConfirmation = async () => {
   setupQueueEvents(depositQueue, "Deposit Confirmation");
 };
 
+/**
+ * Processes jobs for handling successful cryptocurrency deposits.
+ * It updates the deposit status, increases the user's wallet balance, and sends a success notification via Telegram.
+ */
 const processDepositSuccess = async () => {
   const depositSuccessQueue = new Bull(QUEUE_NAMES.DEPOSIT_SUCCESSFUL, opts);
 
@@ -190,6 +215,10 @@ const processDepositSuccess = async () => {
   setupQueueEvents(depositSuccessQueue, "Deposit Success");
 };
 
+/**
+ * Processes jobs for cryptocurrency swaps that are pending or awaiting confirmation.
+ * It refreshes and confirms the instant swap with the Quidax service, and updates the user's wallet balance.
+ */
 const processPendingSwap = async () => {
   const pendingSwapQueue = new Bull(QUEUE_NAMES.PENDING_SWAP, opts);
 
@@ -223,6 +252,10 @@ const processPendingSwap = async () => {
   setupQueueEvents(pendingSwapQueue, "Pending Swap");
 };
 
+/**
+ * Processes jobs for successful cryptocurrency swaps.
+ * It updates the swap status, sends a success message to the user via Telegram, and initiates a withdrawal to a main account.
+ */
 const processSuccessfulSwap = async () => {
   const successSwapQueue = new Bull(QUEUE_NAMES.SUCCESSFUL_SWAP, opts);
 
@@ -260,6 +293,10 @@ const processSuccessfulSwap = async () => {
   setupQueueEvents(successSwapQueue, "Successful Swap");
 };
 
+/**
+ * Processes jobs for finalizing cryptocurrency swaps, including handling withdrawals to user bank accounts.
+ * It updates swap and wallet statuses and sends final notifications to users.
+ */
 const processFinalizeSwap = async () => {
   const finalizeSwapQueue = new Bull(QUEUE_NAMES.FINALIZE_SWAP, opts);
 
@@ -308,6 +345,10 @@ const processFinalizeSwap = async () => {
   setupQueueEvents(finalizeSwapQueue, "Finalize Swap");
 };
 
+/**
+ * Initializes and starts all job queue listeners.
+ * This function ensures that all predefined queues are set up and ready to process incoming jobs.
+ */
 const initializeQueues = async () => {
   try {
     const queueInitializers = [

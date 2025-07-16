@@ -23,6 +23,7 @@ export interface IWallet {
   balance: number;
   lockedBalance: number;
   isCrypto: boolean;
+  updatedAt: Date;
 }
 
 const WalletSchema: Schema = new Schema(

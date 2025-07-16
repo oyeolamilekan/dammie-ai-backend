@@ -69,5 +69,39 @@ Email: support@appstate.co
   ERROR: "😔 Sorry, I encountered an error. Please try again later or contact support.",
   RATE_LIMIT_ERROR: "⚠️ I'm receiving too many requests. Please wait a moment and try again.",
   INVALID_MESSAGE: "Please send a text message. I can help you with crypto transactions! 💰",
-  UNKNOWN_REQUEST: "🤔 I'm not sure how to help with that. Try asking about crypto balances, wallet addresses, or swaps!"
+  UNKNOWN_REQUEST: "🤔 I'm not sure how to help with that. Try asking about crypto balances, wallet addresses, or swaps!",
+
+  /**
+   * @function SWAP_COMPLETED
+   * @description Message for a successfully completed swap.
+   * @param {string} amount - The amount of cryptocurrency swapped.
+   * @param {string} currency - The currency symbol (e.g., BTC, ETH).
+   */
+  SWAP_COMPLETED: (amount: string, currency: string) => `
+🎉 Swap Completed! Your ${amount} ${currency} swap is all done. The Naira has been sent to your bank. 🚀
+`,
+
+  /**
+   * @function FAILED_SWAP
+   * @description Message for a failed swap.
+   * @param {string} amount - The amount of cryptocurrency that failed to swap.
+   * @param {string} currency - The currency symbol (e.g., BTC, ETH).
+   */
+  FAILED_SWAP: (amount: string, currency: string) => `
+❌ Your swap of ${amount} ${currency} has failed. The crypto has been returned to your wallet. Please try again or contact support. 😔
+`,
+
+  /**
+   * @function BANK_ACCOUNT_UPDATED
+   * @description Message for successfully updated bank account details.
+   * @param {string} accountName - The name on the bank account.
+   * @param {string} accountNumber - The bank account number.
+   * @param {string} bankName - The name of the bank.
+   */
+  BANK_ACCOUNT_UPDATED: (accountName: string, accountNumber: string, bankName: string) => `
+✅ Your bank account details have been updated successfully!
+Bank Name: ${bankName}
+Account Name: ${accountName}
+Account Number: ${accountNumber}
+`,
 };

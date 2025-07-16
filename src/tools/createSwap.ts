@@ -3,6 +3,20 @@ import { getUserByTelegramId } from "../queries/user.query";
 import { findOneWallet } from "../queries/wallet.query";
 import { quidax } from "../services/quidax.service";
 
+/**
+ * @function initiateSwap
+ * @description Initiates a cryptocurrency swap (e.g., crypto to Naira) for a user.
+ * It performs checks for user existence, wallet availability, and sufficient balance
+ * before interacting with the Quidax API to create an instant swap quotation.
+ * Finally, it records the swap details in the database and generates a formatted message
+ * for the user with swap details and an approval action.
+ * @param {string} amount - The amount of cryptocurrency the user wants to swap.
+ * @param {string} coin - The symbol of the cryptocurrency to be swapped (e.g., "BTC", "ETH").
+ * @param {object} user - An object containing user details, specifically `userId` (Telegram ID).
+ * @param {string} user.userId - The Telegram ID of the user initiating the swap.
+ * @returns {Promise<string>} A promise that resolves to a formatted string message
+ *   containing swap details or an error message if the swap cannot be initiated.
+ */
 export const initiateSwap = async (amount: string, coin: string, user: any) => {
   const numAmount = parseFloat(amount);
   const userData = await getUserByTelegramId(user.userId);
@@ -39,8 +53,6 @@ export const initiateSwap = async (amount: string, coin: string, user: any) => {
     to_currency: 'ngn',
     from_amount: numAmount.toString()
   })
-
-  console.log(response)
 
   const {
     id,
