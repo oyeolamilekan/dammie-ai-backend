@@ -1,10 +1,10 @@
 export const ACTIONS = {
   'ACTION: ADD_BANK_ACCOUNT': {
     buttonText: "🏦 Add Bank Account",
-    url: "https://dammie-ai-frontend-da6e.vercel.app/bank/"
+    url: "https://dammie-ai-frontend.vercel.app/bank/"
   },
   'ACTION: APPROVE_SWAP_ACTION': {
     buttonText: "🏦 Approve Transaction", 
-    url: "https://dammie-ai-frontend-da6e.vercel.app/transaction/"
+    url: "https://dammie-ai-frontend.vercel.app/transaction/"
   }
 };

@@ -125,7 +125,7 @@ class DammieCryptoBot {
           parse_mode: 'Markdown',
           disable_web_page_preview: true,
           reply_markup: !user ? {
-            inline_keyboard: [[{ text: "Complete Signup", web_app: { url: `https://dammie-ai-frontend-da6e.vercel.app/auth/${intent.completeSignupId}` } }]]
+            inline_keyboard: [[{ text: "Complete Signup", web_app: { url: `https://dammie-ai-frontend.vercel.app/auth/${intent.completeSignupId}` } }]]
           } : null
         });
         break;
