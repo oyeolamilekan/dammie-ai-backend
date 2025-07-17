@@ -1,3 +1,4 @@
+import { findBank } from "../queries/bank.query";
 import { createSwap } from "../queries/swap.query";
 import { getUserByTelegramId } from "../queries/user.query";
 import { findOneWallet } from "../queries/wallet.query";
@@ -46,6 +47,12 @@ export const initiateSwap = async (amount: string, coin: string, user: any) => {
 
   if (wallet.balance <= 0) {
     return `❌ Your ${coin} wallet is empty. Please deposit some ${coin} before swapping.`;
+  }
+
+  const accountNumber = await findBank({ user: _id });
+
+  if (!accountNumber) {
+    return '❌ Bank account not found. Please add a bank account before swapping.';
   }
 
   const response = await quidax.createInstantSwap(userData.subUserId, {
