@@ -5,6 +5,7 @@
  */
 import Redis from "ioredis";
 import CONFIG from "../config/config";
+import Logging from "../library/logging.utils";
 
 const { REDIS_URL } = CONFIG
 
@@ -32,11 +33,29 @@ export const opts = {
             case 'client':
                 if (!client) {
                     client = new Redis(REDIS_URL as string, contOpts as any);
+                    client.on('connect', () => {
+                        Logging.info('Redis client connected');
+                    });
+                    client.on('ready', () => {
+                        Logging.info('Redis client ready');
+                    });
+                    client.on('error', (err: any) => {
+                        Logging.error('Redis client error:', err);
+                    });
                 }
                 return client;
             case 'subscriber':
                 if (!subscriber) {
                     subscriber = new Redis(REDIS_URL as string, contOpts as any);
+                    subscriber.on('connect', () => {
+                        Logging.info('Redis subscriber connected');
+                    });
+                    subscriber.on('ready', () => {
+                        Logging.info('Redis subscriber ready');
+                    });
+                    subscriber.on('error', (err: any) => {
+                        Logging.error('Redis subscriber error:', err);
+                    });
                 }
                 return subscriber;
             case 'bclient':
