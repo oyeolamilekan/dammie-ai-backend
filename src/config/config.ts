@@ -40,7 +40,7 @@ const CONFIG = {
   PENDING: 'pending',
   FAILED: 'failed',
   SUCCESS: 'success',
-  SUPPORTED_CRYPTOS: ['trx'],
+  SUPPORTED_CRYPTOS: ['trx', 'btc'],
   STATUS: ['pending', 'failed', 'success'],
   MAIN_ACCOUNT_ID: process.env.MAIN_ACCOUNT_ID as string,
   CURRENT_RATES: {

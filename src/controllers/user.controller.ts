@@ -93,11 +93,11 @@ export const createUserController = asyncHandler(async (req: Request, res: Respo
     const user = await createUser(userData);
 
     // Create wallet job for the new user
-    // await createWalletJob({
-    //   userId: user.id,
-    //   subUserId: quidaxResponse.id,
-    //   email: user.email
-    // });
+    await createWalletJob({
+      userId: user.id,
+      subUserId: quidaxResponse.id,
+      email: user.email
+    });
 
     return res.status(201).json(createSuccessResponse('User successfully created', user));
   } catch (error) {
