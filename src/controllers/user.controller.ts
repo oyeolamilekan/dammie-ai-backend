@@ -9,6 +9,7 @@ import { createWalletJob, processSwap } from '../jobs/event.job';
 import { NameMatcher } from '../helpers/nameMatcher';
 import { createBank, findBank } from '../queries/bank.query';
 import { findSwapById } from '../queries/swap.query';
+import Logging from '../library/logging.utils';
 
 // Constants
 const SALT_ROUNDS = 10;
@@ -49,18 +50,21 @@ export const createUserController = asyncHandler(async (req: Request, res: Respo
   // Validate intent existence
   const intent = await getIntentByCompleteSignupId(id);
   if (!intent) {
+    Logging.error(`Intent not found: ${intent}`);
     return res.status(404).json(createErrorResponse('Intent not found'));
   }
 
   // Validate required fields
   const validationError = validateUserCreationInput(email, firstName, lastName);
   if (validationError) {
+    Logging.error(`Validation error: ${validationError}`);
     return res.status(400).json(createErrorResponse(validationError));
   }
 
   // Check if user already exists
   const existingUser = await getUserByIntentId(intent._id as string);
   if (existingUser) {
+    Logging.error(`User already exists: ${existingUser}`);
     return res.status(400).json(createErrorResponse('User already exists'));
   }
 
@@ -95,7 +99,7 @@ export const createUserController = asyncHandler(async (req: Request, res: Respo
     // Create wallet job for the new user
     await createWalletJob({
       userId: user.id,
-      subUserId: quidaxResponse.id,
+      subUserId: user.subUserId,
       email: user.email
     });
 
