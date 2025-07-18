@@ -60,9 +60,7 @@ Email: support@appstate.co
 🚀 Your wallet address has been assigned! ✅
 💎 Address: ${address}
 💎 Currency: ${currency.toUpperCase()}
-🔄 Currently awaiting network confirmations...
-⏱️ This usually takes just a few minutes
-🔔 We'll ping you the moment it's ready!
+You can now send your ${currency.toUpperCase()} to this address.
   `,
   SUCESS_DEPOSIT: (amount: string, currency: string, blockchain: string, hash: string) => `
 🎉 Deposit Complete - You're All Set! ✅
