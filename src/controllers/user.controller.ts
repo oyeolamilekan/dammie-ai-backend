@@ -105,7 +105,7 @@ export const createUserController = asyncHandler(async (req: Request, res: Respo
 
     return res.status(201).json(createSuccessResponse('User successfully created', user));
   } catch (error) {
-    console.error('Error creating user:', error);
+    Logging.error('Error creating user:', error);
     return res.status(500).json(createErrorResponse('Failed to create user'));
   }
 });
@@ -139,7 +139,7 @@ export const approveTransactionController = asyncHandler(async (req: Request, re
 
     return res.status(200).json(createSuccessResponse('Transaction approved successfully'));
   } catch (error) {
-    console.error('Error approving transaction:', error);
+    Logging.error('Error approving transaction:', error);
     return res.status(500).json(createErrorResponse('Failed to approve transaction'));
   }
 });
@@ -191,7 +191,7 @@ export const addBankAccountController = asyncHandler(async (req: Request, res: R
 
     return res.status(200).json(createSuccessResponse('Bank account added successfully', bankAccount));
   } catch (error) {
-    console.error('Error adding bank account:', error);
+    Logging.error('Error adding bank account:', error);
     return res.status(500).json(createErrorResponse('Failed to add bank account'));
   }
 });
