@@ -1,6 +1,7 @@
 import Bull from "bull"
 import { opts } from "./redis.job"
 import { QUEUE_NAMES } from "./queueNames.job";
+import Logging from "../library/logging.utils";
 
 /**
  * @function createWalletJob
@@ -8,6 +9,7 @@ import { QUEUE_NAMES } from "./queueNames.job";
  * @param {any} data - The information needed to create the wallet, usually including user ID and crypto type.
  */
 export const createWalletJob = async (data: any) => {
+  Logging.info(`Creating wallet for user: ${data.userId}`);
   const createWalletQueue = new Bull(QUEUE_NAMES.CREATE_WALLET, opts)
   await createWalletQueue.add(data)
 }
