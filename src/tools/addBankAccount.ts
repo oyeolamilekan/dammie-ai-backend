@@ -1,3 +1,5 @@
+import { getUserByTelegramId } from "../queries/user.query";
+
 /**
  * @function addBankAccount
  * @description Generates a message instructing the user to add a bank account for crypto swaps.
@@ -9,6 +11,14 @@
  *   with instructions and a button for adding a bank account.
  */
 export const addBankAccount = async (user: any) => {
+  const userData = await getUserByTelegramId(user.userId);
+
+  if (!userData) {
+    return '❌ User not found. Please ensure you are registered.';
+  }
+
+  const { _id } = userData;
+
   return `
 🏦 *Add Bank Account*
 
@@ -26,6 +36,6 @@ To receive Naira from your crypto swaps, you need to add a bank account.
 Click the button below to open the bank account form in Telegram and update your information.
 
 ACTION: ADD_BANK_ACCOUNT
-PARAM: ${user._id}
+PARAM: ${_id}
 `;
 }
