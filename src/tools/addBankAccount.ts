@@ -26,6 +26,6 @@ To receive Naira from your crypto swaps, you need to add a bank account.
 Click the button below to open the bank account form in Telegram and update your information.
 
 ACTION: ADD_BANK_ACCOUNT
-PARAM: ${user.userId}
+PARAM: ${user._id}
 `;
 }
