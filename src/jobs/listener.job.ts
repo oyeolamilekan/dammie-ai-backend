@@ -108,6 +108,9 @@ const processAssignWalletAddress = async () => {
 
       Logging.info(`Assigning crypto address for ${userDetail.firstName} ${userDetail.lastName}: ${JSON.stringify(addressObject)}`);
 
+      const message = MESSAGES.ADDRESS_ASSIGNED(address, currency.toUpperCase());
+      await telegramBot.sendMessage(userDetail.chatId, message);
+
       await findAndUpdateWallet(
         { user: userDetail._id, currency },
         {
