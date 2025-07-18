@@ -83,14 +83,14 @@ export const initiateSwap = async (amount: string, coin: string, user: any) => {
   return `
 🔄 *Swap Details:*
 • Amount: ${swap.fromAmount} ${swap.fromCurrency}
-• Expected Naira: ₦${swap.toAmount}
-• Rate: ${swap.quotedPrice} per ${coin}
+• Expected Naira: ₦${Number(swap.toAmount) - 200}
+• Rate: ${swap.quotedPrice} per ${coin.toUpperCase()}
 • Processing Fee: ₦200
 • Status: Ready for approval
 
-💰 *You'll receive:* ₦${swap.toAmount}
+💰 *You'll receive:* ₦${Number(swap.toAmount) - 200}
 
-⏰ *Processing Time:* 2-5 minutes after approval
+⏰ *Processing Time:* 1-2 minutes after approval
 🏦 *Delivery:* Direct to your registered bank account
 
 ACTION: APPROVE_SWAP_ACTION
