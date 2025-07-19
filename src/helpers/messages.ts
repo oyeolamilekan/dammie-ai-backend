@@ -8,13 +8,11 @@ Hello ${username}, how far? I'm here to help you with crypto-to-Naira conversion
 
 *Supported Cryptocurrencies:*
 • Bitcoin (BTC)
-• Ethereum (ETH)
-• Tether (USDT)
-• Quidax Token (QDX)
+• Tron (TRX)
 
 Ready to start trading? Just type your request naturally, like:
 • "What's my BTC balance?"
-• "I want to swap 50,000 naira to USDT"
+• "I want to swap 1TRX to Naira"
 
 No wahala, I got you covered! 🇳🇬
   `,
@@ -104,10 +102,25 @@ You can now send your ${currency.toUpperCase()} to this address.
    * @param {string} accountNumber - The bank account number.
    * @param {string} bankName - The name of the bank.
    */
-  BANK_ACCOUNT_UPDATED: (accountName: string, accountNumber: string, bankName: string) => `
-✅ Your bank account details have been updated successfully!
-Bank Name: ${bankName}
-Account Name: ${accountName}
-Account Number: ${accountNumber}
+  BANK_ACCOUNT_UPDATED: () => `
+✅ Your bank account details have been successfully added!
 `,
+  ACCOUNT_CREATED: (username: string) => `
+🎉 Account Created Successfully! ✅
+Hello ${username}, how far? I'm here to help you with crypto-to-Naira conversions! 💰
+
+*Supported Cryptocurrencies:*
+• Bitcoin (BTC)
+• Tron (TRX)
+
+Ready to start trading? Just type your request naturally, like:
+• "What's my BTC balance?"
+• "I want to swap 1TRX to Naira"
+
+No wahala, I got you covered! 🇳🇬
+  `,
+  SWAP_APPROVED: (amount: string, currency: string) => `
+🎉 Swap Approved! ✅
+Your swap of ${amount} ${currency} has been approved. And Transaction is being processed. 🚀
+`
 };

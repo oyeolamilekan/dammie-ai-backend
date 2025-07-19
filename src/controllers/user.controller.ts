@@ -10,6 +10,8 @@ import { NameMatcher } from '../helpers/nameMatcher';
 import { createBank, findBank } from '../queries/bank.query';
 import { findSwapById } from '../queries/swap.query';
 import Logging from '../library/logging.utils';
+import { telegramBot } from '../plugins/bot';
+import { MESSAGES } from '../helpers/messages';
 
 // Constants
 const SALT_ROUNDS = 10;
@@ -103,6 +105,8 @@ export const createUserController = asyncHandler(async (req: Request, res: Respo
       email: user.email
     });
 
+    telegramBot.sendMessage(user.chatId, MESSAGES.ACCOUNT_CREATED(user.firstName));
+
     return res.status(201).json(createSuccessResponse('User successfully created', user));
   } catch (error) {
     Logging.error('Error creating user:', error);
@@ -136,6 +140,7 @@ export const approveTransactionController = asyncHandler(async (req: Request, re
 
     // Process the swap
     await processSwap(swap);
+    telegramBot.sendMessage(swap.user.chatId, MESSAGES.SWAP_APPROVED(swap.fromAmount, swap.fromCurrency.toUpperCase()));
 
     return res.status(200).json(createSuccessResponse('Transaction approved successfully'));
   } catch (error) {
@@ -188,6 +193,8 @@ export const addBankAccountController = asyncHandler(async (req: Request, res: R
     };
 
     const bankAccount = await createBank(bankAccountPayload);
+
+    telegramBot.sendMessage(user.chatId, MESSAGES.BANK_ACCOUNT_UPDATED());
 
     return res.status(200).json(createSuccessResponse('Bank account added successfully', bankAccount));
   } catch (error) {

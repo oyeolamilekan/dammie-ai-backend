@@ -33,7 +33,7 @@ export const getWalletBalance = async (coin: string, user: any) => {
 📊 Total: ${wallet!.balance + wallet!.lockedBalance} ${coin}
 
 *Wallet Status:* Active ✅
-*Last Updated:* ${new Date().toLocaleString()}
+*Last Updated:* ${wallet?.updatedAt}
 
 ACTION: NO_ACTION
 `;
