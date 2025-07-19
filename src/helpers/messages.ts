@@ -1,6 +1,10 @@
-import CONFIG from "../config/config";
-
 export const MESSAGES = {
+  /**
+   * @function WELCOME
+   * @description Welcome message displayed when a user first interacts with the bot.
+   * @param {string} username - The username of the user.
+   * @returns {string} Formatted welcome message with supported cryptocurrencies and usage examples.
+   */
   WELCOME: (username: string) => `
 🚀 *Welcome to Dammie Crypto Bot!*
 
@@ -17,17 +21,11 @@ Ready to start trading? Just type your request naturally, like:
 No wahala, I got you covered! 🇳🇬
   `,
 
-  RATES: () => `
-📈 *Current Exchange Rates*
-
-BTC: ₦${CONFIG.CURRENT_RATES.BTC.toLocaleString()}
-ETH: ₦${CONFIG.CURRENT_RATES.ETH.toLocaleString()}
-USDT: ₦${CONFIG.CURRENT_RATES.USDT.toLocaleString()}
-QDX: ₦${CONFIG.CURRENT_RATES.QDX.toLocaleString()}
-
-*Rates are updated in real-time and subject to market fluctuations*
-  `,
-
+  /**
+   * @function HELP
+   * @description Displays help information and usage instructions for the bot.
+   * @returns {string} Help message with natural language commands and security tips.
+   */
   HELP: () => `
 ❓ *How to Use Dammie Crypto Bot*
 
@@ -45,6 +43,16 @@ Email: support@appstate.co
 ⚠️ Always verify transaction details
 ⚠️ Double-check wallet addresses
   `,
+
+  /**
+   * @function PENDING_DESPOSIT
+   * @description Message for a pending cryptocurrency deposit awaiting network confirmations.
+   * @param {string} amount - The amount of cryptocurrency being deposited.
+   * @param {string} currency - The currency symbol (e.g., BTC, ETH).
+   * @param {string} blockchain - The blockchain network (e.g., BTC, ETH).
+   * @param {string} hash - The transaction hash.
+   * @returns {string} Formatted message indicating deposit is pending confirmation.
+   */
   PENDING_DESPOSIT: (amount: string, currency: string, blockchain: string, hash: string) => `
 🚀 Your deposit is on its way! ⏳
 💎 Amount: ${amount} ${currency.toUpperCase()}
@@ -54,12 +62,29 @@ Email: support@appstate.co
 ⏱️ This usually takes just a few minutes
 🔔 We'll ping you the moment it's ready!
   `,
+
+  /**
+   * @function ADDRESS_ASSIGNED
+   * @description Message sent when a wallet address is assigned to a user for a specific cryptocurrency.
+   * @param {string} address - The assigned wallet address.
+   * @param {string} currency - The currency symbol (e.g., BTC, ETH).
+   * @returns {string} Formatted message with the assigned wallet address and instructions.
+   */
   ADDRESS_ASSIGNED: (address: string, currency: string) => `
 🚀 Your wallet address has been assigned! ✅
 💎 Address: ${address}
 💎 Currency: ${currency.toUpperCase()}
 You can now send your ${currency.toUpperCase()} to this address.
   `,
+
+  /**
+   * @function SUCESS_DEPOSIT
+   * @description Message for a successfully deposited cryptocurrency.
+   * @param {string} amount - The amount of cryptocurrency deposited.
+   * @param {string} currency - The currency symbol (e.g., BTC, ETH).
+   * @param {string} blockchain - The blockchain network (e.g., BTC, ETH).
+   * @param {string} hash - The transaction hash.
+   */
   SUCESS_DEPOSIT: (amount: string, currency: string, blockchain: string, hash: string) => `
 🎉 Deposit Complete - You're All Set! ✅
 💎 Amount Credited: ${amount} ${currency.toUpperCase()}
@@ -69,10 +94,30 @@ You can now send your ${currency.toUpperCase()} to this address.
 🚀 Your funds are now available for trading!
 
   `,
+
+  /**
+   * @description Rate limiting warning message when user sends messages too quickly.
+   */
   RATE_LIMITED: "⚠️ Please slow down! You're sending messages too quickly. Try again in a minute.",
+
+  /**
+   * @description Generic error message for unexpected errors.
+   */
   ERROR: "😔 Sorry, I encountered an error. Please try again later or contact support.",
+
+  /**
+   * @description Error message displayed when the system is receiving too many requests.
+   */
   RATE_LIMIT_ERROR: "⚠️ I'm receiving too many requests. Please wait a moment and try again.",
+
+  /**
+   * @description Message for invalid message types (non-text messages).
+   */
   INVALID_MESSAGE: "Please send a text message. I can help you with crypto transactions! 💰",
+
+  /**
+   * @description Message for unrecognized or unclear user requests.
+   */
   UNKNOWN_REQUEST: "🤔 I'm not sure how to help with that. Try asking about crypto balances, wallet addresses, or swaps!",
 
   /**
@@ -105,6 +150,12 @@ You can now send your ${currency.toUpperCase()} to this address.
   BANK_ACCOUNT_UPDATED: () => `
 ✅ Your bank account details have been successfully added!
 `,
+
+/**
+ * @function ACCOUNT_CREATED
+ * @description Message for successfully created account.
+ * @param {string} username - The username of the user.
+ */
   ACCOUNT_CREATED: (username: string) => `
 🎉 Account Created Successfully! ✅
 Hello ${username}, how far? I'm here to help you with crypto-to-Naira conversions! 💰
@@ -119,6 +170,13 @@ Ready to start trading? Just type your request naturally, like:
 
 No wahala, I got you covered! 🇳🇬
   `,
+
+  /**
+   * @function SWAP_APPROVED
+   * @description Message for successfully approved swap.
+   * @param {string} amount - The amount of cryptocurrency swapped.
+   * @param {string} currency - The currency symbol (e.g., BTC, ETH).
+   */
   SWAP_APPROVED: (amount: string, currency: string) => `
 🎉 Swap Approved! ✅
 Your swap of ${amount} ${currency} has been approved. And Transaction is being processed. 🚀

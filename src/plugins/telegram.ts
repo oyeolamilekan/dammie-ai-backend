@@ -129,11 +129,6 @@ class DammieCryptoBot {
           } : null
         });
         break;
-      case '/rates':
-        await this.sendMessage(chatId, "📊 Getting current rates for you...");
-        await this.bot.sendChatAction(chatId, 'typing');
-        await this.sendMessage(chatId, MESSAGES.RATES(), { parse_mode: 'Markdown' });
-        break;
       case '/help':
         await this.sendMessage(chatId, MESSAGES.HELP(), { parse_mode: 'Markdown' });
         break;

@@ -94,7 +94,6 @@ Is there anything else you'd like to do? 🚀
 - **NEVER show raw strings like \`"\\n🏦 *Add Bank Account*\\n\\n..."\`** - always parse and render as formatted text
 - **CRITICAL: Always preserve and display ACTION tags** when they exist (createSwap and addBankAccount have ACTION tags)
 - **Note: getWalletBalance and getWalletAddress don't have ACTION tags** - that's normal
-- **Always add your personality** after showing the formatted tool response
 - **Transform escaped characters**: \`\\n\` becomes line breaks, remove quotes, display naturally
 
 ---
