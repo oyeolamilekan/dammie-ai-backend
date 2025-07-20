@@ -66,6 +66,7 @@ export const fetchUserDeposits = async ({
     const date = new Date(deposit.createdAt).toLocaleDateString();
     
     message += `${statusEmoji} ${deposit.amount} ${deposit.currency.toUpperCase()}\n`;
+    message += `Blockchain hash: ${deposit.txid}\n`;
     message += `${deposit.status} • ${date}\n\n`;
   });
 

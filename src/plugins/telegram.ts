@@ -20,6 +20,8 @@ import Logging from '../library/logging.utils';
 import { extractValue, removeKeyValuePairs } from '../utils';
 import { fetchUserDeposits } from '../tools/fetchUserDeposit';
 import { fetchUserSwaps } from '../tools/fetchUserSwaps';
+import { computeAndFormatTotalSwap } from '../tools/computeUserSwaps';
+import { computeAndFormatTotalDeposit } from '../tools/computeUserDeposit';
 
 // Validate environment variables
 if (!CONFIG.BOT_TOKEN || !CONFIG.OPENAI_API_KEY) {
@@ -186,6 +188,28 @@ class DammieCryptoBot {
             }),
             execute: async ({ coin, startDate, endDate }) => {
               return fetchUserDeposits({ username, userId, coin, startDate, endDate });
+            }
+          }),
+          computeTotalDeposits: tool({
+            description: 'Calculate total deposit amounts - Computes the sum of all successful cryptocurrency deposits made by the user, with optional filtering by cryptocurrency type and date range. Returns total amount, transaction count, and summary statistics.',
+            parameters: z.object({
+              coin: z.string().optional().describe("Filter by cryptocurrency symbol (e.g., BTC, ETH, USDT, QDX, TRX). If not specified, calculates totals for all cryptocurrencies"),
+              startDate: z.string().optional().describe("Calculate deposits from this date onwards (inclusive). Format: YYYY-MM-DD"),
+              endDate: z.string().optional().describe("Calculate deposits up to this date (inclusive). Format: YYYY-MM-DD"),
+            }),
+            execute: async ({ coin, startDate, endDate }) => {
+              return computeAndFormatTotalDeposit({ username, userId, coin, startDate, endDate });
+            }
+          }),
+          computeTotalSwaps: tool({
+            description: 'Calculate total swap amounts - Computes the sum of all successful cryptocurrency swap transactions made by the user, with optional filtering by cryptocurrency type and date range. Returns total crypto swapped, total naira received (after fees), transaction count, and fee summary.',
+            parameters: z.object({
+              coin: z.string().optional().describe("Filter by source cryptocurrency symbol (e.g., BTC, ETH, USDT, QDX, TRX). If not specified, calculates totals for all cryptocurrencies swapped"),
+              startDate: z.string().optional().describe("Calculate swaps from this date onwards (inclusive). Format: YYYY-MM-DD"),
+              endDate: z.string().optional().describe("Calculate swaps up to this date (inclusive). Format: YYYY-MM-DD"),
+            }),
+            execute: async ({ coin, startDate, endDate }) => {
+              return computeAndFormatTotalSwap({ username, userId, coin, startDate, endDate });
             }
           }),
           createSwap: tool({

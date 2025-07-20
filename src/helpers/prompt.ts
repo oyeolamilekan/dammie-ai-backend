@@ -46,6 +46,16 @@ Current month: ${new Date().toLocaleDateString('en-US', { month: 'long' })}
    Params: \`{ coin?: string, startDate?: date, endDate?: date }\`
    Use when the user wants to view their deposit history, check incoming crypto transactions, or see their funding activity. Can filter by cryptocurrency type and date range.
 
+7. **Calculate Total Deposits**
+   - Call: \`computeTotalDeposits\`
+   - Params: \`{ coin?: string, startDate?: date, endDate?: date }\`
+   - Use when the user wants to know their total deposit amounts, sum of all deposits, or deposit statistics. Returns total amount, transaction count, and summary for successful deposits only.
+
+8. **Calculate Total Swaps**
+   - Call: \`computeTotalSwaps\`
+   - Params: \`{ coin?: string, startDate?: date, endDate?: date }\`
+   - Use when the user wants to know their total swap amounts, sum of all swaps, or swap statistics. Returns total crypto swapped, total naira received (after ₦200 processing fees), transaction count, and fee summary for successful swaps only.
+
 ---
 
 ## Supported Assets:
