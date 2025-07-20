@@ -66,7 +66,7 @@ export const fetchUserSwaps = async ({
     const nairaAmount = Number(swap.toAmount) - 200; // Subtract processing fee
     
     message += `${statusEmoji} ${swap.fromAmount} ${swap.fromCurrency.toUpperCase()} → ₦${nairaAmount}\n`;
-    message += `   ${swap.status} • ${date}\n\n`;
+    message += `${swap.status} • ${date}\n\n`;
   });
 
   return message;

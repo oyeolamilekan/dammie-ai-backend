@@ -42,13 +42,7 @@ const CONFIG = {
   SUCCESS: 'success',
   SUPPORTED_CRYPTOS: ['trx', 'btc'],
   STATUS: ['pending', 'failed', 'success'],
-  MAIN_ACCOUNT_ID: process.env.MAIN_ACCOUNT_ID as string,
-  CURRENT_RATES: {
-    BTC: 75000000,
-    ETH: 5500000,
-    USDT: 1650,
-    QDX: 250
-  },
+  MAIN_ACCOUNT_ID: process.env.MAIN_ACCOUNT_ID as string
 };
 
 export default CONFIG;

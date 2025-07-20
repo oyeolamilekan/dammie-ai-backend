@@ -39,7 +39,7 @@ const DepositSchema: Schema = new Schema(
       type: String,
       required: true,
       default: 'pending',
-      enum: ['pending', 'failed', 'successful']
+      enum: ['pending', 'failed', 'success']
     },
     currency: {
       type: String,
