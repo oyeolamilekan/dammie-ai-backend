@@ -45,8 +45,20 @@ export const fetchUserDeposits = async ({
   
   if (startDate || endDate) {
     filter.createdAt = {};
-    if (startDate) filter.createdAt.$gte = startDate;
-    if (endDate) filter.createdAt.$lte = endDate;
+    
+    if (startDate) {
+      // Set start of day (00:00:00.000)
+      const start = new Date(startDate);
+      start.setHours(0, 0, 0, 0);
+      filter.createdAt.$gte = start;
+    }
+    
+    if (endDate) {
+      // Set end of day (23:59:59.999)
+      const end = new Date(endDate);
+      end.setHours(23, 59, 59, 999);
+      filter.createdAt.$lte = end;
+    }
   }
 
   // Get deposits
