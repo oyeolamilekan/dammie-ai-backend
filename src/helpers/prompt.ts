@@ -27,6 +27,16 @@ Your job is to understand user prompts and call the appropriate function based o
    - Params: \`{ coin: string, amount: string }\`
    - Use when the user wants to sell, convert, or swap crypto to Naira (₦).
 
+5. **Fetch Swap Transactions**  
+   - Call: \`fetchSwaps\`
+   - Params: \`{ coin?: string, startDate?: date, endDate?: date }\`
+   - Use when the user wants to view their swap history, check past transactions, or see their trading activity. Can filter by cryptocurrency type and date range.
+
+6. **Fetch Deposit Transactions**
+   Call: \`fetchDeposits\`
+   Params: \`{ coin?: string, startDate?: date, endDate?: date }\`
+   Use when the user wants to view their deposit history, check incoming crypto transactions, or see their funding activity. Can filter by cryptocurrency type and date range.
+
 ---
 
 ## Supported Assets:

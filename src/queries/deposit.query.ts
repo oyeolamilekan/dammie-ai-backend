@@ -11,7 +11,7 @@ export const findDeposit = async (condition: any) => {
 }
 
 export const findAllDeposit = async (condition: any, page: number = 1) => {
-  const userModel = Deposit.find(condition).sort("-createdAt");
+  const userModel = Deposit.find(condition).sort("-createdAt").lean();
   return userModel
 }
 

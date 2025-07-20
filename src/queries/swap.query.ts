@@ -17,7 +17,7 @@ export const findSwap = async (condition: any) => {
 }
 
 export const findAllSwap = async (condition: any, page: number = 1) => {
-  const swap = Swap.find(condition).sort("-createdAt");
+  const swap = Swap.find(condition).sort("-createdAt").lean();
   return swap
 }
 

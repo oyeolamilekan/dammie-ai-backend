@@ -18,6 +18,8 @@ import { getUserByIntentId } from '../queries/user.query';
 import { initiateSwap } from '../tools/createSwap';
 import Logging from '../library/logging.utils';
 import { extractValue, removeKeyValuePairs } from '../utils';
+import { fetchUserDeposits } from '../tools/fetchUserDeposit';
+import { fetchUserSwaps } from '../tools/fetchUserSwaps';
 
 // Validate environment variables
 if (!CONFIG.BOT_TOKEN || !CONFIG.OPENAI_API_KEY) {
@@ -162,6 +164,28 @@ class DammieCryptoBot {
             parameters: z.object({}),
             execute: async () => {
               return addBankAccount({ username, userId });
+            }
+          }),
+          fetchSwaps: tool({
+            description: 'Fetch cryptocurrency swap transactions - Retrieves a list of swap transactions initiated by the user, with optional filtering by cryptocurrency type and date range',
+            parameters: z.object({
+              coin: z.string().optional().describe("Filter by cryptocurrency symbol (e.g., BTC, ETH, USDT, QDX, TRX). If not specified, returns swaps for all cryptocurrencies"),
+              startDate: z.date().optional().describe("Filter swaps from this date onwards (inclusive). Format: YYYY-MM-DD"),
+              endDate: z.date().optional().describe("Filter swaps up to this date (inclusive). Format: YYYY-MM-DD"),
+            }),
+            execute: async ({ coin, startDate, endDate }) => {
+              return fetchUserSwaps({ username, userId, coin, startDate, endDate });
+            }
+          }),
+          fetchDeposits: tool({
+            description: 'Fetch cryptocurrency deposit transactions - Retrieves a list of deposit transactions received by the user, with optional filtering by cryptocurrency type and date range',
+            parameters: z.object({
+              coin: z.string().optional().describe("Filter by cryptocurrency symbol (e.g., BTC, ETH, USDT, QDX, TRX). If not specified, returns deposits for all cryptocurrencies"),
+              startDate: z.date().optional().describe("Filter deposits from this date onwards (inclusive). Format: YYYY-MM-DD"),
+              endDate: z.date().optional().describe("Filter deposits up to this date (inclusive). Format: YYYY-MM-DD"),
+            }),
+            execute: async ({ coin, startDate, endDate }) => {
+              return fetchUserDeposits({ username, userId, coin, startDate, endDate });
             }
           }),
           createSwap: tool({
