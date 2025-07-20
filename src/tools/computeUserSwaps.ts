@@ -79,8 +79,6 @@ export const computeTotalSwap = async ({
     }
   }
 
-  Logging.info(filter)
-
   // Get swaps
   const swaps = await findAllSwap(filter);
   
