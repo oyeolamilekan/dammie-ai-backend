@@ -154,7 +154,7 @@ class DammieCryptoBot {
 
     try {
       const { text: aiResponse } = await generateText({
-        model: openai('gpt-4o-mini'),
+        model: openai('gpt-4o'),
         prompt: text,
         system: SYSTEM_PROMPT,
         maxSteps: 5,
