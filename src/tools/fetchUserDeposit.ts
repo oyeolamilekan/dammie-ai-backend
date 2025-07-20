@@ -60,7 +60,7 @@ export const fetchUserDeposits = async ({
   let message = '📥 *Your Deposit History:*\n\n';
 
   deposits.forEach((deposit: any) => {
-    const statusEmoji = deposit.status === 'confirmed' ? '✅' : 
+    const statusEmoji = deposit.status === 'successful' ? '✅' : 
                        deposit.status === 'pending' ? '🕐' : '❌';
     
     const date = new Date(deposit.createdAt).toLocaleDateString();

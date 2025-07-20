@@ -59,7 +59,7 @@ export const fetchUserSwaps = async ({
   let message = '🔄 *Your Swap History:*\n\n';
 
   swaps.forEach((swap: any) => {
-    const statusEmoji = swap.status === 'completed' ? '✅' : 
+    const statusEmoji = swap.status === 'success' ? '✅' : 
                        swap.status === 'pending' ? '🕐' : '❌';
     
     const date = new Date(swap.createdAt).toLocaleDateString();
