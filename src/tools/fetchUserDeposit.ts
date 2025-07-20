@@ -47,16 +47,16 @@ export const fetchUserDeposits = async ({
     filter.createdAt = {};
     
     if (startDate) {
-      // Set start of day (00:00:00.000)
+      // Set start of day (00:00:00.000) - MongoDB compatible
       const start = new Date(startDate);
-      start.setHours(0, 0, 0, 0);
+      start.setUTCHours(0, 0, 0, 0);
       filter.createdAt.$gte = start;
     }
     
     if (endDate) {
-      // Set end of day (23:59:59.999)
+      // Set end of day (23:59:59.999) - MongoDB compatible
       const end = new Date(endDate);
-      end.setHours(23, 59, 59, 999);
+      end.setUTCHours(23, 59, 59, 999);
       filter.createdAt.$lte = end;
     }
   }
