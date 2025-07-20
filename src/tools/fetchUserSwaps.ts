@@ -9,8 +9,8 @@ interface FetchDepositsParams {
   username?: string;
   userId: number;
   coin?: string;
-  startDate?: Date;
-  endDate?: Date;
+  startDate?: string;
+  endDate?: string;
 }
 
 /**
