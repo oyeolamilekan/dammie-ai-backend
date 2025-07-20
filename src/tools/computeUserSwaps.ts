@@ -1,5 +1,6 @@
 import { getUserByTelegramId } from "../queries/user.query";
 import { findAllSwap } from "../queries/swap.query";
+import Logging from "../library/logging.utils";
 
 /**
  * @interface ComputeTotalSwapParams
@@ -77,6 +78,8 @@ export const computeTotalSwap = async ({
       filter.createdAt.$lte = end;
     }
   }
+
+  Logging.info(filter)
 
   // Get swaps
   const swaps = await findAllSwap(filter);
