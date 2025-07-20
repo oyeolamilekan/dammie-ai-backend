@@ -58,7 +58,7 @@ export const computeTotalSwap = async ({
   };
   
   if (coin) {
-    filter.fromCurrency = coin.toLowerCase();
+    filter.fromCurrency = coin.toUpperCase();
   }
   
   if (startDate || endDate) {
