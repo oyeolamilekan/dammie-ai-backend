@@ -35,7 +35,7 @@ interface DepositSummary {
  * @param {string} [params.endDate] - Optional end date filter (ISO string)
  * @returns {Promise<DepositSummary | null>} Deposit summary or null if user not found
  */
-export const computeTotalDeposit = async ({ 
+const computeTotalDeposit = async ({ 
   userId, 
   coin, 
   startDate, 
@@ -109,7 +109,7 @@ export const computeTotalDeposit = async ({
  * @param {number} userId - User ID for context
  * @returns {string} Formatted summary message
  */
-export const formatDepositSummary = (
+const formatDepositSummary = (
   summary: DepositSummary | null
 ): string => {
   if (!summary) {

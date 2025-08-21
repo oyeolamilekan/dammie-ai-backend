@@ -24,6 +24,7 @@ interface CONFIG {
 
 
 const CONFIG = {
+  FRONTEND_URL: process.env.FRONTEND_URL,
   PORT: Number(process.env.PORT) || 3000,
   NODE_ENV: process.env.NODE_ENV || 'development',
   BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN!,

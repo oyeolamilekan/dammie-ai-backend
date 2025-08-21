@@ -39,7 +39,7 @@ interface SwapSummary {
  * @param {string} [params.endDate] - Optional end date filter (ISO string)
  * @returns {Promise<SwapSummary | null>} Swap summary or null if user not found
  */
-export const computeTotalSwap = async ({ 
+const computeTotalSwap = async ({ 
   userId, 
   coin, 
   startDate, 
@@ -136,7 +136,7 @@ export const computeTotalSwap = async ({
  * @param {number} userId - User ID for context
  * @returns {string} Formatted summary message
  */
-export const formatSwapSummary = (
+const formatSwapSummary = (
   summary: SwapSummary | null, 
   userId: number
 ): string => {

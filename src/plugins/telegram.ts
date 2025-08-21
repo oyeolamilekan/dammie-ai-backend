@@ -129,7 +129,15 @@ class DammieCryptoBot {
           parse_mode: 'Markdown',
           disable_web_page_preview: true,
           reply_markup: !user ? {
-            inline_keyboard: [[{ text: "Complete Signup", web_app: { url: `https://dammie-ai-frontend.vercel.app/auth/${intent.completeSignupId}` } }]]
+            inline_keyboard: [
+              [
+                { 
+                  text: "Complete Signup", web_app: { 
+                    url: `${CONFIG.FRONTEND_URL}/auth/${intent.completeSignupId}` 
+                  } 
+                }
+              ]
+            ]
           } : null
         });
         break;
@@ -191,7 +199,7 @@ class DammieCryptoBot {
             }
           }),
           computeTotalDeposits: tool({
-            description: 'Calculate total deposit amounts - Computes the sum of all successful cryptocurrency deposits made by the user, with optional filtering by cryptocurrency type and date range. Returns total amount, transaction count, and summary statistics.',
+            description: 'Calculate total deposit amounts - Calculate the sum of all successful cryptocurrency deposits made by the user, with optional filtering by cryptocurrency type and date range. Returns total amount, transaction count, and summary statistics.',
             parameters: z.object({
               coin: z.string().optional().describe("Filter by cryptocurrency symbol (e.g., BTC, ETH, USDT, QDX, TRX). If not specified, calculates totals for all cryptocurrencies"),
               startDate: z.string().optional().describe("Calculate deposits from this date onwards (inclusive). Format: YYYY-MM-DD"),
