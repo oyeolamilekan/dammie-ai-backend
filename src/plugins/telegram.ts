@@ -366,7 +366,17 @@ class DammieCryptoBot {
 
       await this.bot.sendPhoto(chatId, qrBuffer, {
         caption: "\n" + caption,
-        parse_mode: 'Markdown'
+        parse_mode: 'Markdown',
+        reply_markup: {
+          inline_keyboard: [
+            [
+              {
+                text: '📋 Copy Address',
+                callback_data: `copy_${Buffer.from(address).toString('base64').slice(0, 50)}`
+              }
+            ]
+          ]
+        }
       });
 
     } catch (error) {
