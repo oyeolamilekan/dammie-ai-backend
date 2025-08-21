@@ -290,6 +290,8 @@ class DammieCryptoBot {
       const fullUrl = `${url}${param}`
       Logging.debug("full url", fullUrl)
 
+      Logging.info(`Action: ${action}, Param: ${param}`);
+
       if (action === 'GET_WALLET_ADDRESS') {
         return this.sendImageAndCaption(chatId, param!, messageText);
       }
