@@ -280,33 +280,56 @@ class DammieCryptoBot {
 
     Logging.info(`AI Response: ${responseText}`);
 
-    const action = Object.keys(ACTIONS).find(key => responseText.includes(key));
+    const extractedAction = extractValue(responseText, "ACTION");
+    const extractedParam = extractValue(responseText, "PARAM");
 
-    if (action) {
-      const param = extractValue(responseText, "PARAM")
-      const action = extractValue(responseText, "ACTION")
-      const messageText = removeKeyValuePairs(responseText, ["PARAM", "ACTION"]);
-      const { buttonText, url } = ACTIONS[action as keyof typeof ACTIONS];
-      const fullUrl = `${url}${param}`
-      Logging.debug("full url", fullUrl)
-
-      Logging.info(`Action: ${action}, Param: ${param}`);
-
-      if (action === 'GET_WALLET_ADDRESS') {
-        return this.sendImageAndCaption(chatId, param!, messageText);
+    // Handle wallet address action specifically
+    if (extractedAction === 'GET_WALLET_ADDRESS') {
+      if (!extractedParam) {
+        Logging.error('No wallet address provided in response');
+        await this.sendMessage(chatId, MESSAGES.ERROR);
+        return;
       }
 
-      return this.sendMessage(chatId, messageText, {
+      const messageText = removeKeyValuePairs(responseText, ["PARAM", "ACTION"]);
+      await this.sendImageAndCaption(chatId, extractedParam, messageText);
+      return;
+    }
+
+    // Handle other actions (both extracted and legacy detection)
+    const legacyAction = Object.keys(ACTIONS).find(key => responseText.includes(key));
+    const actionToUse = extractedAction || legacyAction;
+
+    if (actionToUse) {
+      const actionConfig = ACTIONS[actionToUse as keyof typeof ACTIONS];
+      if (!actionConfig) {
+        Logging.error(`Unknown action: ${actionToUse}`);
+        await this.sendMessage(chatId, responseText, {
+          parse_mode: 'Markdown',
+          disable_web_page_preview: true
+        });
+        return;
+      }
+
+      const messageText = removeKeyValuePairs(responseText, ["PARAM", "ACTION"]);
+      const { buttonText, url } = actionConfig;
+      const fullUrl = `${url}${extractedParam || ''}`;
+
+      Logging.info(`Action: ${actionToUse}, Param: ${extractedParam}`);
+      Logging.debug("Full URL:", fullUrl);
+
+      await this.sendMessage(chatId, messageText, {
         parse_mode: 'Markdown',
         disable_web_page_preview: true,
         reply_markup: {
           inline_keyboard: [[{ text: buttonText, web_app: { url: fullUrl } }]]
         }
       });
+      return;
     }
 
-    // Regular response
-    return this.sendMessage(chatId, responseText, {
+    // Send regular response
+    await this.sendMessage(chatId, responseText, {
       parse_mode: 'Markdown',
       disable_web_page_preview: true
     });
@@ -342,7 +365,7 @@ class DammieCryptoBot {
       });
 
       await this.bot.sendPhoto(chatId, qrBuffer, {
-        caption: caption,
+        caption: "\n" + caption,
         parse_mode: 'Markdown'
       });
 

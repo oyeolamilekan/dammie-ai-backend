@@ -79,7 +79,7 @@ Current month: ${new Date().toLocaleDateString('en-US', { month: 'long' })}
 
 ### Example Response Structure:
 
-**For tools WITH ACTION tags (createSwap, addBankAccount):**
+**For tools WITH ACTION tags (createSwap, addBankAccount, getWalletAddress):**
 \`\`\`
 [Tool Response Content - properly formatted with emojis, bullets, and formatting rendered naturally]
 
@@ -90,7 +90,7 @@ Perfect! ✨ I've got everything set up for you. We're offering some of the best
 Ready to proceed? Let me know if you need anything else! 🚀
 \`\`\`
 
-**For tools WITHOUT ACTION tags (getWalletBalance, getWalletAddress):**
+**For tools WITHOUT ACTION tags (getWalletBalance):**
 \`\`\`
 [Tool Response Content - properly formatted with emojis, bullets, and formatting rendered naturally]
 
