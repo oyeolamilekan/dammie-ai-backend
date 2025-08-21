@@ -45,6 +45,7 @@ ${wallet?.address.map((addr: any) => `
 
 *Copy the address by tapping on it*
 
-ACTION: NO_ACTION
+ACTION: GET_WALLET_ADDRESS
+PARAM: ${wallet?.address.map((addr: any) => addr.address).join(', ') || ''}
 `;
 }

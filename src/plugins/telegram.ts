@@ -22,6 +22,8 @@ import { fetchUserDeposits } from '../tools/fetchUserDeposit';
 import { fetchUserSwaps } from '../tools/fetchUserSwaps';
 import { computeAndFormatTotalSwap } from '../tools/computeUserSwaps';
 import { computeAndFormatTotalDeposit } from '../tools/computeUserDeposit';
+import QRCode from 'qrcode';
+import { th } from 'zod/v4/locales';
 
 // Validate environment variables
 if (!CONFIG.BOT_TOKEN || !CONFIG.OPENAI_API_KEY) {
@@ -131,10 +133,10 @@ class DammieCryptoBot {
           reply_markup: !user ? {
             inline_keyboard: [
               [
-                { 
-                  text: "Complete Signup", web_app: { 
-                    url: `${CONFIG.FRONTEND_URL}/auth/${intent.completeSignupId}` 
-                  } 
+                {
+                  text: "Complete Signup", web_app: {
+                    url: `${CONFIG.FRONTEND_URL}/auth/${intent.completeSignupId}`
+                  }
                 }
               ]
             ]
@@ -282,10 +284,15 @@ class DammieCryptoBot {
 
     if (action) {
       const param = extractValue(responseText, "PARAM")
+      const action = extractValue(responseText, "ACTION")
       const messageText = removeKeyValuePairs(responseText, ["PARAM", "ACTION"]);
       const { buttonText, url } = ACTIONS[action as keyof typeof ACTIONS];
       const fullUrl = `${url}${param}`
       Logging.debug("full url", fullUrl)
+
+      if (action === 'GET_WALLET_ADDRESS') {
+        return this.sendImageAndCaption(chatId, param!, messageText);
+      }
 
       return this.sendMessage(chatId, messageText, {
         parse_mode: 'Markdown',
@@ -316,6 +323,30 @@ class DammieCryptoBot {
       await this.bot.sendMessage(chatId, text, options);
     } catch (error) {
       Logging.error('Error sending message:', error);
+    }
+  }
+
+  private async sendImageAndCaption(chatId: number, address: string, caption: string): Promise<void> {
+    try {
+      const qrBuffer = await QRCode.toBuffer(address, {
+        type: 'png',
+        width: 512,
+        margin: 2,
+        color: {
+          dark: '#000000',
+          light: '#FFFFFF'
+        },
+        errorCorrectionLevel: 'M'
+      });
+
+      await this.bot.sendPhoto(chatId, qrBuffer, {
+        caption: caption,
+        parse_mode: 'Markdown'
+      });
+
+    } catch (error) {
+      Logging.error('Error sending image:', error);
+      await this.sendMessage(chatId, MESSAGES.ERROR);
     }
   }
 
