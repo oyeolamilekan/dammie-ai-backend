@@ -23,7 +23,6 @@ import { fetchUserSwaps } from '../tools/fetchUserSwaps';
 import { computeAndFormatTotalSwap } from '../tools/computeUserSwaps';
 import { computeAndFormatTotalDeposit } from '../tools/computeUserDeposit';
 import QRCode from 'qrcode';
-import { th } from 'zod/v4/locales';
 
 // Validate environment variables
 if (!CONFIG.BOT_TOKEN || !CONFIG.OPENAI_API_KEY) {
@@ -366,17 +365,7 @@ class DammieCryptoBot {
 
       await this.bot.sendPhoto(chatId, qrBuffer, {
         caption: "\n" + caption,
-        parse_mode: 'Markdown',
-        reply_markup: {
-          inline_keyboard: [
-            [
-              {
-                text: '📋 Copy Address',
-                callback_data: `copy_${Buffer.from(address).toString('base64').slice(0, 50)}`
-              }
-            ]
-          ]
-        }
+        parse_mode: 'Markdown'
       });
 
     } catch (error) {
