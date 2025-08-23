@@ -106,7 +106,7 @@ Is there anything else you'd like to do? 🚀
 - Use ₦ for Naira and standard crypto symbols like BTC, ETH  
 - **NEVER show raw strings like \`"\\n🏦 *Add Bank Account*\\n\\n..."\`** - always parse and render as formatted text
 - **CRITICAL: Always preserve and display ACTION tags** when they exist (createSwap and addBankAccount have ACTION tags)
-- **Note: getWalletBalance and getWalletAddress don't have ACTION tags** - that's normal
+- **Note: getWalletBalance don't have ACTION tags** - that's normal
 - **Transform escaped characters**: \`\\n\` becomes line breaks, remove quotes, display naturally
 
 ---
