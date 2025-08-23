@@ -164,10 +164,11 @@ class DammieCryptoBot {
     await this.bot.sendChatAction(chatId, 'typing');
 
     try {
+      const prompt = await SYSTEM_PROMPT(userId);
       const { text: aiResponse } = await generateText({
         model: openai('gpt-4.1'),
         prompt: text,
-        system: SYSTEM_PROMPT,
+        system: prompt,
         maxSteps: 5,
         tools: {
           addBankAccount: tool({
@@ -270,69 +271,67 @@ class DammieCryptoBot {
    * @param {string} response - The AI-generated response text.
    */
   private async sendAIResponse(chatId: number, response: string): Promise<void> {
-    const responseText = response?.trim();
+  const responseText = response?.trim();
+  
+  if (!responseText) {
+    await this.sendMessage(chatId, MESSAGES.UNKNOWN_REQUEST);
+    return;
+  }
 
-    if (!responseText) {
-      await this.sendMessage(chatId, MESSAGES.UNKNOWN_REQUEST);
-      return;
-    }
+  Logging.info(`AI Response: ${responseText}`);
 
-    Logging.info(`AI Response: ${responseText}`);
+  try {
+    const action = extractValue(responseText, "ACTION");
+    const param = extractValue(responseText, "PARAM")?.trim();
 
-    const extractedAction = extractValue(responseText, "ACTION");
-    const extractedParam = extractValue(responseText, "PARAM");
-
-    // Handle wallet address action specifically
-    if (extractedAction === 'GET_WALLET_ADDRESS') {
-      if (!extractedParam) {
+    // Handle wallet address action - send image
+    if (action === 'GET_WALLET_ADDRESS') {
+      if (!param) {
         Logging.error('No wallet address provided in response');
         await this.sendMessage(chatId, MESSAGES.ERROR);
         return;
       }
-
       const messageText = removeKeyValuePairs(responseText, ["PARAM", "ACTION"]);
-      await this.sendImageAndCaption(chatId, extractedParam, messageText);
+      await this.sendImageAndCaption(chatId, param, messageText);
       return;
     }
 
-    // Handle other actions (both extracted and legacy detection)
-    const legacyAction = Object.keys(ACTIONS).find(key => responseText.includes(key));
-    const actionToUse = extractedAction || legacyAction;
+    // Check for actions that need buttons
+    const actionConfig = ACTIONS[action as keyof typeof ACTIONS] || 
+                        ACTIONS[Object.keys(ACTIONS).find(key => 
+                          responseText.toUpperCase().includes(key.toUpperCase())
+                        ) as keyof typeof ACTIONS];
 
-    if (actionToUse) {
-      const actionConfig = ACTIONS[actionToUse as keyof typeof ACTIONS];
-      if (!actionConfig) {
-        Logging.error(`Unknown action: ${actionToUse}`);
-        await this.sendMessage(chatId, responseText, {
-          parse_mode: 'Markdown',
-          disable_web_page_preview: true
-        });
-        return;
-      }
-
+    if (actionConfig) {
       const messageText = removeKeyValuePairs(responseText, ["PARAM", "ACTION"]);
-      const { buttonText, url } = actionConfig;
-      const fullUrl = `${url}${extractedParam || ''}`;
-
-      Logging.info(`Action: ${actionToUse}, Param: ${extractedParam}`);
-      Logging.debug("Full URL:", fullUrl);
-
+      const fullUrl = `${actionConfig.url}${param || ''}`;
+      
+      Logging.info(`Sending action: ${action || 'legacy'}, URL: ${fullUrl}`);
+      
       await this.sendMessage(chatId, messageText, {
         parse_mode: 'Markdown',
         disable_web_page_preview: true,
         reply_markup: {
-          inline_keyboard: [[{ text: buttonText, web_app: { url: fullUrl } }]]
+          inline_keyboard: [[{ 
+            text: actionConfig.buttonText, 
+            web_app: { url: fullUrl } 
+          }]]
         }
       });
       return;
     }
 
-    // Send regular response
+    // Send regular message
     await this.sendMessage(chatId, responseText, {
       parse_mode: 'Markdown',
       disable_web_page_preview: true
     });
+
+  } catch (error) {
+    Logging.error('Error in sendAIResponse:', error);
+    await this.sendMessage(chatId, MESSAGES.ERROR);
   }
+}
 
   /**
    * @private
