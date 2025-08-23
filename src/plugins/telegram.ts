@@ -271,67 +271,67 @@ class DammieCryptoBot {
    * @param {string} response - The AI-generated response text.
    */
   private async sendAIResponse(chatId: number, response: string): Promise<void> {
-  const responseText = response?.trim();
-  
-  if (!responseText) {
-    await this.sendMessage(chatId, MESSAGES.UNKNOWN_REQUEST);
-    return;
-  }
+    const responseText = response?.trim();
 
-  Logging.info(`AI Response: ${responseText}`);
+    if (!responseText) {
+      await this.sendMessage(chatId, MESSAGES.UNKNOWN_REQUEST);
+      return;
+    }
 
-  try {
-    const action = extractValue(responseText, "ACTION");
-    const param = extractValue(responseText, "PARAM")?.trim();
+    Logging.info(`AI Response: ${responseText}`);
 
-    // Handle wallet address action - send image
-    if (action === 'GET_WALLET_ADDRESS') {
-      if (!param) {
-        Logging.error('No wallet address provided in response');
-        await this.sendMessage(chatId, MESSAGES.ERROR);
+    try {
+      const action = extractValue(responseText, "ACTION");
+      const param = extractValue(responseText, "PARAM")?.trim();
+
+      // Handle wallet address action - send image
+      if (action === 'GET_WALLET_ADDRESS') {
+        if (!param) {
+          Logging.error('No wallet address provided in response');
+          await this.sendMessage(chatId, MESSAGES.ERROR);
+          return;
+        }
+        const messageText = removeKeyValuePairs(responseText, ["PARAM", "ACTION"]);
+        await this.sendImageAndCaption(chatId, param, messageText);
         return;
       }
-      const messageText = removeKeyValuePairs(responseText, ["PARAM", "ACTION"]);
-      await this.sendImageAndCaption(chatId, param, messageText);
-      return;
-    }
 
-    // Check for actions that need buttons
-    const actionConfig = ACTIONS[action as keyof typeof ACTIONS] || 
-                        ACTIONS[Object.keys(ACTIONS).find(key => 
-                          responseText.toUpperCase().includes(key.toUpperCase())
-                        ) as keyof typeof ACTIONS];
+      // Check for actions that need buttons
+      const actionConfig = ACTIONS[action as keyof typeof ACTIONS] ||
+        ACTIONS[Object.keys(ACTIONS).find(key =>
+          responseText.toUpperCase().includes(key.toUpperCase())
+        ) as keyof typeof ACTIONS];
 
-    if (actionConfig) {
-      const messageText = removeKeyValuePairs(responseText, ["PARAM", "ACTION"]);
-      const fullUrl = `${actionConfig.url}${param || ''}`;
-      
-      Logging.info(`Sending action: ${action || 'legacy'}, URL: ${fullUrl}`);
-      
-      await this.sendMessage(chatId, messageText, {
+      if (actionConfig) {
+        const messageText = removeKeyValuePairs(responseText, ["PARAM", "ACTION"]);
+        const fullUrl = `${actionConfig.url}${param || ''}`;
+
+        Logging.info(`Sending action: ${action || 'legacy'}, URL: ${fullUrl}`);
+
+        await this.sendMessage(chatId, messageText, {
+          parse_mode: 'Markdown',
+          disable_web_page_preview: true,
+          reply_markup: {
+            inline_keyboard: [[{
+              text: actionConfig.buttonText,
+              web_app: { url: fullUrl }
+            }]]
+          }
+        });
+        return;
+      }
+
+      // Send regular message
+      await this.sendMessage(chatId, responseText, {
         parse_mode: 'Markdown',
-        disable_web_page_preview: true,
-        reply_markup: {
-          inline_keyboard: [[{ 
-            text: actionConfig.buttonText, 
-            web_app: { url: fullUrl } 
-          }]]
-        }
+        disable_web_page_preview: true
       });
-      return;
+
+    } catch (error) {
+      Logging.error('Error in sendAIResponse:', error);
+      await this.sendMessage(chatId, MESSAGES.ERROR);
     }
-
-    // Send regular message
-    await this.sendMessage(chatId, responseText, {
-      parse_mode: 'Markdown',
-      disable_web_page_preview: true
-    });
-
-  } catch (error) {
-    Logging.error('Error in sendAIResponse:', error);
-    await this.sendMessage(chatId, MESSAGES.ERROR);
   }
-}
 
   /**
    * @private
